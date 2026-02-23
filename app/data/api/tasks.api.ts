@@ -1,7 +1,8 @@
-import type { Task } from "../models/TaskModel";
+import type TaskModel from "../models/TaskModel";
 import { Client } from "../client";
+import { GetTime } from "~/utilities/time";
 
-export async function getAllTasks(): Promise<Task[]> {
+export async function getAllTasks(): Promise<TaskModel[]> {
     // const res = await fetch("http://todo.local/api/content/items/task");
     // if (!res.ok) {
     //     throw new Response("Failed to fetch tasks.", { status: res.status });
@@ -19,18 +20,23 @@ export async function getDays(): Promise<Date[]> {
     }
 
     // Get Data
-    const days: resType[] = await Client.get("items/task?fields[date]=1");
+    const days: resType[] = await Client.get("items/task?fields[date]=1&sort[_created]=-1");
 
     // Transform Data to Date[]
-    let datesSet:Set<string> = new Set<string>;
+    let datesSet: Set<string> = new Set<string>;
 
-    for(let d of days){
+    for (let d of days) {
         datesSet.add(d.date);
     }
 
-    let dates:Date[] = [];
-    datesSet.forEach((d)=>dates.push(new Date(d)));
+    let dates: Date[] = [];
+    datesSet.forEach((d) => dates.push(new Date(d)));
 
     // Return Data
     return dates;
+}
+
+export async function getTasksOfDay(date: Date): Promise<TaskModel[]> {
+    console.log(`items/task?filter[date][$eq]=${GetTime(date)})}`);
+    return await Client.get(`items/task?filter[date][$eq]=${GetTime(date)}`);
 }

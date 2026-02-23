@@ -2,8 +2,7 @@ import type { Route } from "./+types/days";
 import { getDays } from "~/data/api/tasks.api";
 import Days from "~/components/Days";
 import { useState } from "react";
-
-
+import TasksPanel from "~/components/TasksPanel";
 
 
 export async function clientLoader({ }) {
@@ -17,12 +16,13 @@ export function meta({ params }: Route.MetaArgs) {
   ];
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home({ params, loaderData }: Route.ComponentProps) {
   const [days, setDays] = useState(loaderData.days)
 
   return (
-    <div className="flex flex-col min-h-screen gap-6 mt-6">
+    <div className="flex flex-row min-h-screen gap-6 mt-6">
       <Days days={days} />
+      <TasksPanel date={new Date(params.date)} />
     </div>
   );
 }

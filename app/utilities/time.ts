@@ -16,6 +16,10 @@ export function DayOfWeekToString(dayOfWeek: number) {
         case 6:
             return "Saturday"
         default:
-            break;
+            return "Sunday"
     }
+}
+
+export function GetTime(date: Date) {
+    return date.toISOString().split("T")[0];
 }
